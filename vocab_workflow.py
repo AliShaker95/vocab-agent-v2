@@ -99,7 +99,12 @@ tools = [
     },
 ]
 
-level = input("Choose your level: beginner, intermediate, advanced:\n")
+levels = ["beginner", "intermediate", "advanced"]
+level = input(f"Choose your level: {', '.join(levels)}:\n").strip().lower()
+
+while level not in levels:
+    print(f"{level} is not a valid level. Please choose from {', '.join(levels)}.")
+    level = input(f"Choose your level: {', '.join(levels)}:\n").strip().lower()
 
 messages = [
     {
@@ -184,5 +189,4 @@ if word:
             print(data["content"][0]["text"])
             break
         elif block["type"] == "text":
-            print("\n\nelif worked\n\n")
             print(block["text"])
