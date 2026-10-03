@@ -1,4 +1,5 @@
 import os
+
 import requests
 from dotenv import load_dotenv
 
@@ -159,7 +160,7 @@ if word:
         "stream": False,
         "system": [
             {
-                "text": f"You help learners practice vocabulary. Always use check_sentence tool. Check if the target word is correctly used in the learner's sentence. Ignore irrelevant errors and focus on the target word.",
+                "text": "You help learners practice vocabulary. Always use check_sentence tool. Check if the target word is correctly used in the learner's sentence. Ignore irrelevant errors and focus on the target word.",
                 "type": "text",
             }
         ],
