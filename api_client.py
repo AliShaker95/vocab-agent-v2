@@ -3,7 +3,6 @@ import os
 import requests
 from dotenv import load_dotenv
 
-
 load_dotenv()
 api_key = os.getenv("ANTHROPIC_API_KEY")
 
