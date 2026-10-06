@@ -4,16 +4,16 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
-api_key = os.getenv("ANTHROPIC_API_KEY")
+API_KEY = os.getenv("ANTHROPIC_API_KEY")
 
-url = "https://api.anthropic.com/v1/messages"
+URL = "https://api.anthropic.com/v1/messages"
 
-model = "claude-haiku-4-5-20251001"
+MODEL = "claude-haiku-4-5-20251001"
 
-headers = {
+HEADERS = {
     "Content-Type": "application/json",
     "anthropic-version": "2023-06-01",
-    "X-Api-Key": api_key,
+    "X-Api-Key": API_KEY,
 }
 
 
@@ -22,7 +22,7 @@ def call_model(messages: list, system: str | list, tools: list | None = None) ->
     payload = {
         "max_tokens": 1024,
         "messages": messages,
-        "model": model,
+        "model": MODEL,
         "stream": False,
         "system": system,
         "temperature": 0.7,
@@ -30,5 +30,5 @@ def call_model(messages: list, system: str | list, tools: list | None = None) ->
     # Only the agent's calls get tools. Calls made inside a tool don't.
     if tools:
         payload["tools"] = tools
-    response = requests.post(url, headers=headers, json=payload)
+    response = requests.post(URL, headers=HEADERS, json=payload)
     return response.json()

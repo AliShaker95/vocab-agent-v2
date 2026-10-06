@@ -4,9 +4,9 @@ import random
 from api_client import call_model
 
 with open("vocab_list.json", encoding="utf-8") as file:
-    vocab_list = json.load(file)
+    VOCAB_LIST = json.load(file)
 
-tools = [
+TOOLS = [
     {
         "name": "get_vocab",
         "description": "Get a new vocabulary item for the learner's level. Use it whenever the learner needs a new word, including when they ask for another one for clarification. Don't invent words yourself.",
@@ -15,7 +15,7 @@ tools = [
             "properties": {
                 "level": {
                     "type": "string",
-                    "description": f"level of the learner: {', '.join(vocab_list)}",
+                    "description": f"level of the learner: {', '.join(VOCAB_LIST)}",
                 }
             },
             "required": ["level"],
@@ -45,11 +45,11 @@ tools = [
 def get_vocab(level: str) -> str:
     """Return a random vocabulary item for the selected level."""
     level = level.lower()
-    if level in vocab_list:
-        words = vocab_list.get(level)
+    if level in VOCAB_LIST:
+        words = VOCAB_LIST.get(level)
         return random.choice(words)
     else:
-        return f"Level is invalid! Please select from: {', '.join(vocab_list)}."
+        return f"Level is invalid! Please select from: {', '.join(VOCAB_LIST)}."
 
 
 def check_sentence(word: str, sentence: str) -> str:
