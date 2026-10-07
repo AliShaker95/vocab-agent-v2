@@ -1,7 +1,13 @@
 import os
+import sys
 
 import requests
 from dotenv import load_dotenv
+
+
+class APIError(Exception):
+    pass
+
 
 load_dotenv()
 API_KEY = os.getenv("ANTHROPIC_API_KEY")
@@ -30,5 +36,9 @@ def call_model(messages: list, system: str | list, tools: list | None = None) ->
     # Only the agent's calls get tools. Calls made inside a tool don't.
     if tools:
         payload["tools"] = tools
-    response = requests.post(URL, headers=HEADERS, json=payload)
-    return response.json()
+    response = requests.post(URL, headers=HEADERS, json=payload, timeout=30)
+    data = response.json()
+    if data.get("type") == "error":
+        ################################################################################
+        raise APIError(f"API returned an error: {data['error']['message']}")
+    return data

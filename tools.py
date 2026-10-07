@@ -1,10 +1,21 @@
 import json
 import random
+import sys
 
 from api_client import call_model
 
-with open("vocab_list.json", encoding="utf-8") as file:
-    VOCAB_LIST = json.load(file)
+try:
+    with open("vocab_list.json", encoding="utf-8") as file:
+        VOCAB_LIST = json.load(file)
+except FileNotFoundError:
+    print('"vocab_list.json" not found!')
+    sys.exit()
+except json.JSONDecodeError:
+    print('The file "vocab_list.json" is not valid JSON!')
+    sys.exit()
+except Exception as e:
+    print(f'Unexpected error loading "vocab_list.json": {e}')
+    sys.exit()
 
 TOOLS = [
     {
@@ -44,7 +55,7 @@ TOOLS = [
 
 def get_vocab(level: str) -> str:
     """Return a random vocabulary item for the selected level."""
-    level = level.lower()
+    level = level.strip().lower()
     if level in VOCAB_LIST:
         words = VOCAB_LIST.get(level)
         return random.choice(words)
@@ -62,6 +73,7 @@ def check_sentence(word: str, sentence: str) -> str:
     ]
     system = "Check whether the learner used the target word in the sentence correctly. Judge only the target word; ignore unrelated mistakes. Give brief feedback."
     response = call_model(messages, system)
+    ################################################################################
     return response["content"][0]["text"]
 
 
