@@ -19,7 +19,7 @@ def run_agent(messages: list):
         try:
             data = call_model(messages, SYSTEM_PROMPT, TOOLS)
         except APIError as e:
-            print(f"An error occurred: {e}\nPlease try again later.")
+            print(f"An error occurred: {e}")
             break
         messages.append({"role": "assistant", "content": data["content"]})
 
