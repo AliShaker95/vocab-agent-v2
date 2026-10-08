@@ -1,4 +1,4 @@
-from api_client import call_model
+from api_client import APIError, call_model
 from tools import TOOLS, run_tool
 
 MAX_STEPS = 10
@@ -16,7 +16,11 @@ SYSTEM_PROMPT = """You are a vocabulary tutor for English learners.
 def run_agent(messages: list):
     """Run the agent loop for one user turn: call the model, run any requested tools, and repeat until the model replies with text or the step limit is reached."""
     for step in range(MAX_STEPS):
-        data = call_model(messages, SYSTEM_PROMPT, TOOLS)
+        try:
+            data = call_model(messages, SYSTEM_PROMPT, TOOLS)
+        except APIError as e:
+            print(f"An error occurred: {e}\nPlease try again later.")
+            break
         messages.append({"role": "assistant", "content": data["content"]})
 
         if data["stop_reason"] != "tool_use":

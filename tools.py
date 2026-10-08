@@ -2,7 +2,7 @@ import json
 import random
 import sys
 
-from api_client import call_model
+from api_client import APIError, call_model
 
 try:
     with open("vocab_list.json", encoding="utf-8") as file:
@@ -72,8 +72,12 @@ def check_sentence(word: str, sentence: str) -> str:
         }
     ]
     system = "Check whether the learner used the target word in the sentence correctly. Judge only the target word; ignore unrelated mistakes. Give brief feedback."
-    response = call_model(messages, system)
-    ################################################################################
+
+    try:
+        response = call_model(messages, system)
+    except APIError as e:
+        return f"Couldn't check the sentence: {e}"
+
     return response["content"][0]["text"]
 
 
