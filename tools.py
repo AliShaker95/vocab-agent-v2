@@ -55,6 +55,8 @@ TOOLS = [
 
 def get_vocab(level: str) -> str:
     """Return a random vocabulary item for the selected level."""
+    if not level:
+        return f"No level given. Please call get_vocab with one of: {', '.join(VOCAB_LIST)}"
     level = level.strip().lower()
     if level in VOCAB_LIST:
         words = VOCAB_LIST.get(level)
