@@ -1,4 +1,5 @@
 import os
+import sys
 
 import requests
 from dotenv import load_dotenv
@@ -13,6 +14,7 @@ API_KEY = os.getenv("ANTHROPIC_API_KEY")
 
 if not API_KEY:
     print("The ANTHROPIC_API_KEY is missing. Add it to your .env file.")
+    sys.exit()
 
 URL = "https://api.anthropic.com/v1/messages"
 
