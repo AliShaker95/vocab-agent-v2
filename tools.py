@@ -10,11 +10,11 @@ try:
 except FileNotFoundError:
     print('"vocab_list.json" not found!')
     sys.exit()
-except json.JSONDecodeError:
-    print('The file "vocab_list.json" is not valid JSON!')
+except json.JSONDecodeError as e:
+    print(f'The file "vocab_list.json" is not valid JSON: {e}')
     sys.exit()
-except Exception as e:
-    print(f'Unexpected error loading "vocab_list.json": {e}')
+except OSError as e:
+    print(f'Could not read "vocab_list.json": {e}')
     sys.exit()
 
 TOOLS = [
