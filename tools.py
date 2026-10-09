@@ -1,8 +1,14 @@
 import json
+import os
 import random
 import sys
 
+import requests
+
 from api_client import APIError, call_model
+
+DICTIONARY_URL = "https://www.dictionaryapi.com/api/v3/references/learners/json/"
+DICTIONARY_API_KEY = os.getenv("MERRIAM_WEBSTER_API_KEY")
 
 try:
     with open("vocab_list.json", encoding="utf-8") as file:
@@ -60,6 +66,20 @@ TOOLS = [
                 },
             },
             "required": ["word", "sentence"],
+        },
+    },
+    {
+        "name": "lookup_word",
+        "description": "Look up a word and return its pronunciation (IPA and audio link), word forms, and part of speech. Use it whenever you introduce a new word from get_vocab, and whenever the learner asks about pronunciation, forms, or part of speech of any word.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "word": {
+                    "type": "string",
+                    "description": "The word to be looked up.",
+                }
+            },
+            "required": ["word"],
         },
     },
 ]
@@ -131,11 +151,66 @@ def check_sentence(word: str, sentence: str) -> str:
     return verdict.get("feedback", text)
 
 
+def lookup_word(word: str) -> str:
+    if not word:
+        return "No word given. Please give a word when call lookup_word."
+
+    word = word.strip().lower()
+
+    try:
+        response = requests.get(
+            DICTIONARY_URL + word, params={"key": DICTIONARY_API_KEY}, timeout=10
+        )
+    except requests.RequestException as e:
+        return f"Couldn't get the data!: {e}"
+
+    if response.status_code != 200:
+        return "Couldn't get the data!"
+
+    try:
+        data = response.json()
+    except ValueError:
+        return "Couldn't read the dictionary response."
+
+    entry = data[0]
+
+    prs = entry["hwi"].get("prs", [])
+    first = prs[0] if prs else {}
+
+    ipa = first.get("ipa", "not available")
+
+    sound = first.get("sound")
+    if sound and sound.get("audio"):
+        audio_value = sound["audio"]
+        if audio_value.startswith("bix"):
+            folder = "bix"
+        elif audio_value.startswith("gg"):
+            folder = "gg"
+        elif not audio_value[0].isalpha():
+            folder = "number"
+        else:
+            folder = audio_value[0]
+        audio_link = f"https://media.merriam-webster.com/audio/prons/en/us/mp3/{folder}/{audio_value}.mp3"
+    else:
+        audio_link = "not available"
+    part_of_speech = entry["fl"]
+    forms = [item["if"].replace("*", "") for item in entry.get("ins", [])]
+    return (
+        f"Word: {word}\n"
+        f"Pronunciation (IPA): {ipa}\n"
+        f"Audio link: {audio_link}\n"
+        f"Part of speech: {part_of_speech}\n"
+        f"Forms: {', '.join(forms)}\n"
+    )
+
+
 def run_tool(name: str, tool_input: dict) -> str:
     """Run the required tool by getting its name and input as a dictionary and return the result as string."""
     if name == "get_vocab":
         return get_vocab(tool_input.get("level"))
     elif name == "check_sentence":
         return check_sentence(tool_input.get("word"), tool_input.get("sentence"))
+    elif name == "lookup_word":
+        return lookup_word(tool_input.get("word"))
     else:
         return f"Tool '{name}' is not a valid tool!"
