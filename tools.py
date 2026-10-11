@@ -169,38 +169,48 @@ def lookup_word(word: str) -> str:
 
     try:
         data = response.json()
-    except ValueError:
-        return "Couldn't read the dictionary response."
+    except ValueError as e:
+        return f"Couldn't read the dictionary response: {e}"
+
+    if not data or not isinstance(data[0], dict):
+        return f"No dictionary entry found for '{word}'."
 
     entry = data[0]
 
-    prs = entry["hwi"].get("prs", [])
-    first = prs[0] if prs else {}
+    try:
+        pro = entry["hwi"]["prs"][0]
+    except (KeyError, IndexError):
+        pro = {}
 
-    ipa = first.get("ipa", "not available")
+    ipa = pro.get("ipa")
+    audio = pro.get("sound", {}).get("audio")
 
-    sound = first.get("sound")
-    if sound and sound.get("audio"):
-        audio_value = sound["audio"]
-        if audio_value.startswith("bix"):
+    if audio:
+        if audio.startswith("bix"):
             folder = "bix"
-        elif audio_value.startswith("gg"):
+        elif audio.startswith("gg"):
             folder = "gg"
-        elif not audio_value[0].isalpha():
+        elif not audio[0].isalpha():
             folder = "number"
         else:
-            folder = audio_value[0]
-        audio_link = f"https://media.merriam-webster.com/audio/prons/en/us/mp3/{folder}/{audio_value}.mp3"
-    else:
-        audio_link = "not available"
-    part_of_speech = entry["fl"]
-    forms = [item["if"].replace("*", "") for item in entry.get("ins", [])]
+            folder = audio[0]
+
+    audio_link = (
+        f"https://media.merriam-webster.com/audio/prons/en/us/mp3/{folder}/{audio}.mp3"
+        if audio
+        else None
+    )
+
+    pos = entry.get("fl")
+
+    forms = [item["if"].replace("*", "") for item in entry.get("ins", []) if "if" in item]
+
     return (
         f"Word: {word}\n"
-        f"Pronunciation (IPA): {ipa}\n"
-        f"Audio link: {audio_link}\n"
-        f"Part of speech: {part_of_speech}\n"
-        f"Forms: {', '.join(forms)}\n"
+        f"Pronunciation(IPA): {ipa or "not available."}\n"
+        f"Audio Link: {audio_link or "not available."}\n"
+        f"Part of Speech: {pos or "not available."}\n"
+        f"Forms: {", ".join(forms) or "not available."}"
     )
 
 
