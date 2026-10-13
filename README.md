@@ -30,15 +30,26 @@ All API calls are made with raw HTTP requests (`requests`), with no SDK.
 | `known_words.json` | The learner's progress, created automatically (not tracked in git) |
 | `vocab_workflow.py` | The earlier fixed-workflow version, kept for comparison |
 | `.env.example` | Template for the API keys |
+| `requirements.txt` | Python packages the project needs, with exact versions |
 
 ## Setup
 
 1. Install Python 3.12 or newer.
-2. Install the dependencies:
+2. Create a virtual environment in the project folder:
    ```
-   pip install requests python-dotenv
+   python -m venv .venv
    ```
-3. Copy `.env.example` to `.env` and fill in your keys:
+3. Activate it (Windows PowerShell):
+   ```
+   .venv\Scripts\Activate.ps1
+   ```
+   On macOS/Linux: `source .venv/bin/activate`. Your terminal prompt should now start with `(.venv)`.
+   If PowerShell says running scripts is disabled, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, then activate again.
+4. Install the dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+5. Copy `.env.example` to `.env` and fill in your keys:
    ```
    ANTHROPIC_API_KEY=your-anthropic-key-here
    MERRIAM_WEBSTER_API_KEY=your-merriam-webster-key-here
@@ -47,6 +58,8 @@ All API calls are made with raw HTTP requests (`requests`), with no SDK.
    - Merriam-Webster key: https://dictionaryapi.com (register for the **Learner's Dictionary**; keys are per dictionary)
 
 ## Run
+
+With the virtual environment active (`(.venv)` at the start of the prompt):
 
 ```
 python main.py
