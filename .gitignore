@@ -1,6 +1,6 @@
 .venv/
 __pycache__/
-test.py
-test_2.py
 .env
 known_words.json
+test.py
+test_2.py
