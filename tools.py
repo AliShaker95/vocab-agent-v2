@@ -15,15 +15,15 @@ try:
         VOCAB_LIST = json.load(file)
 except FileNotFoundError:
     print('"vocab_list.json" not found!')
-    sys.exit()
+    sys.exit(1)
 except json.JSONDecodeError as e:
     print(f'The file "vocab_list.json" is not valid JSON: {e}')
-    sys.exit()
+    sys.exit(1)
 except OSError as e:
     print(f'Could not read "vocab_list.json": {e}')
-    sys.exit()
+    sys.exit(1)
 
-known_words = {level: [] for level in VOCAB_LIST}
+known_words = {}
 
 try:
     with open("known_words.json", encoding="utf-8") as file:
@@ -117,7 +117,22 @@ def get_vocab(level: str) -> str:
 
 
 def check_sentence(word: str, sentence: str) -> str:
-    """Call the model to check the use of the target word in the sentence without using tools and return the feedback as string."""
+    """Judge the learner's sentence, save the word to known words if it is correct, and return the feedback for Claude, or an error message if the check failed."""
+
+    try:
+        check_result = judge_sentence(word, sentence)
+    except (APIError, json.JSONDecodeError) as e:
+        return f"Couldn't check the sentence: {e}"
+
+    if check_result.get("correct"):
+        update_known_words(word)
+
+    return check_result.get("feedback", "No feedback given.")
+
+
+def judge_sentence(word: str, sentence: str) -> dict:
+    """Ask the model whether the target word is used correctly in the sentence and return the verdict as a dict with "correct" and "feedback". Raises APIError or json.JSONDecodeError on failure."""
+
     messages = [
         {
             "role": "user",
@@ -128,11 +143,7 @@ def check_sentence(word: str, sentence: str) -> str:
     Reply with only JSON, no other text, in this exact format:
     {"correct": true or false, "feedback": "brief feedback for the learner"}"""
 
-    try:
-        response = call_model(messages, system)
-    except APIError as e:
-        return f"Couldn't check the sentence: {e}"
-
+    response = call_model(messages, system)
     text = (
         response["content"][0]["text"]
         .strip()
@@ -140,15 +151,9 @@ def check_sentence(word: str, sentence: str) -> str:
         .removesuffix("```")
         .strip()
     )
-    try:
-        verdict = json.loads(text)
-    except json.JSONDecodeError:
-        return text
+    verdict = json.loads(text)
 
-    if verdict.get("correct"):
-        update_known_words(word)
-
-    return verdict.get("feedback", text)
+    return verdict
 
 
 def lookup_word(word: str) -> str:
@@ -203,14 +208,16 @@ def lookup_word(word: str) -> str:
 
     pos = entry.get("fl")
 
-    forms = [item["if"].replace("*", "") for item in entry.get("ins", []) if "if" in item]
+    forms = [
+        item["if"].replace("*", "") for item in entry.get("ins", []) if "if" in item
+    ]
 
     return (
         f"Word: {word}\n"
-        f"Pronunciation(IPA): {ipa or "not available."}\n"
-        f"Audio Link: {audio_link or "not available."}\n"
-        f"Part of Speech: {pos or "not available."}\n"
-        f"Forms: {", ".join(forms) or "not available."}"
+        f"Pronunciation(IPA): {ipa or 'not available.'}\n"
+        f"Audio Link: {audio_link or 'not available.'}\n"
+        f"Part of Speech: {pos or 'not available.'}\n"
+        f"Forms: {', '.join(forms) or 'not available.'}"
     )
 
 
