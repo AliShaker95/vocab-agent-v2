@@ -18,7 +18,7 @@ if not API_KEY:
 
 URL = "https://api.anthropic.com/v1/messages"
 
-MODEL = "claude-sonnet-5-5"
+MODEL = "claude-haiku-5-5"
 
 HEADERS = {
     "Content-Type": "application/json",
