@@ -121,7 +121,7 @@ def check_sentence(word: str, sentence: str) -> str:
 
     try:
         check_result = judge_sentence(word, sentence)
-    except (APIError, json.JSONDecodeError) as e:
+    except (APIError, json.JSONDecodeError, IndexError) as e:
         return f"Couldn't check the sentence: {e}"
 
     if check_result.get("correct"):
@@ -144,13 +144,10 @@ def judge_sentence(word: str, sentence: str) -> dict:
     {"correct": true or false, "feedback": "brief feedback for the learner"}"""
 
     response = call_model(messages, system)
-    text = (
-        response["content"][0]["text"]
-        .strip()
-        .removeprefix("```json")
-        .removesuffix("```")
-        .strip()
-    )
+    block_text = [
+        block["text"] for block in response["content"] if block["type"] == "text"
+    ]
+    text = block_text[0].strip().removeprefix("```json").removesuffix("```").strip()
     verdict = json.loads(text)
 
     return verdict

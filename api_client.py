@@ -18,7 +18,7 @@ if not API_KEY:
 
 URL = "https://api.anthropic.com/v1/messages"
 
-MODEL = "claude-haiku-4-5-20251001"
+MODEL = "claude-sonnet-5-5"
 
 HEADERS = {
     "Content-Type": "application/json",
@@ -35,7 +35,6 @@ def call_model(messages: list, system: str | list, tools: list | None = None) ->
         "model": MODEL,
         "stream": False,
         "system": system,
-        "temperature": 0.7,
     }
     # Only the agent's calls get tools. Calls made inside a tool don't.
     if tools:

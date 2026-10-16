@@ -50,7 +50,7 @@
     {
         "word": "table",
         "level": "beginner",
-        "sentence": "The tables is near the window.",
+        "sentence": "The table is near the window.",
         "expected": true
     },
     {
@@ -242,7 +242,7 @@
     {
         "word": "listen",
         "level": "beginner",
-        "sentence": "I listening to music everyday.",
+        "sentence": "I listen to music everyday.",
         "expected": true
     },
     {
@@ -741,7 +741,7 @@
         "word": "recommend",
         "level": "intermediate",
         "sentence": "Can you recommend me a good book?",
-        "expected": true
+        "expected": false
     },
     {
         "word": "recommend",
@@ -1131,7 +1131,7 @@
         "word": "come to terms with",
         "level": "advanced",
         "sentence": "We came to terms with the price after a long discussion.",
-        "expected": false
+        "expected": true
     },
     {
         "word": "bear in mind",
