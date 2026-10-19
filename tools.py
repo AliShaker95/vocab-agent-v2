@@ -139,7 +139,20 @@ def judge_sentence(word: str, sentence: str) -> dict:
             "content": f"Check if the target word: '{word}' is correctly used in the sentence: '{sentence}'.",
         }
     ]
-    system = """Check whether the learner used the target word in the sentence correctly. Judge only the target word; ignore unrelated mistakes. Give brief feedback.
+    system = """You check whether a learner used the target word or phrase correctly in one sentence. Judge only the target word, not the rest of the sentence.
+
+    Mark "correct": false if any of these is true:
+    1. The target word is missing. A synonym or a different word does not count. Other forms of the target word (plural, past tense, comparative, -ing) do count as using it.
+    2. The meaning does not fit the sentence or its context, even if the grammar is correct.
+    3. The target word is combined with the wrong words (wrong verb, preposition, article or word order). Check that the collocation is natural.
+    4. The target word itself has the wrong form: wrong plural or uncountable use, wrong ending, wrong part of speech, or a spelling mistake.
+    5. The target word is confused with a similar-looking or similar-sounding word, for example a different phrasal verb or a different word with similar spelling.
+    6. The target is an idiom or fixed expression whose meaning is different from its separate words. Only the idiomatic meaning counts. If the sentence uses the words literally, mark false.
+    Use standard English rules, even if the mistake is common among native speakers.
+
+    Mark "correct": true if the target word is used correctly, even when the sentence has other mistakes. Ignore mistakes in tense, agreement, articles, spelling or word choice that do not involve the target word. Prepositions of time and place ("at seven", "in May") are not part of the target word.
+
+    Give brief feedback for the learner.
     Reply with only JSON, no other text, in this exact format:
     {"correct": true or false, "feedback": "brief feedback for the learner"}"""
 

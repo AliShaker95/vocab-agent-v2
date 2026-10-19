@@ -69,3 +69,5 @@ evals_results.append(
 
 with open("evals_results.json", "w", encoding="utf-8") as file:
     json.dump(evals_results, file, indent=2)
+
+print('The file "evals_results.json" has been saved.')

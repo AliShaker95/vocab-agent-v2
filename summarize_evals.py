@@ -43,6 +43,7 @@ for run in evals_results:
 try:
     with open("RESULTS.md", "w", encoding="utf-8") as file:
         file.write(summary)
+        print('The file "RESULTS.md" has been saved.')
 except OSError as e:
     print(f'Could not write "RESULTS.md": {e}')
     sys.exit(1)
