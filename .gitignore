@@ -4,8 +4,6 @@ __pycache__/
 .ruff_cache/
 .claude/
 known_words.json
-test.py
-test_2.py
 
 
 # Byte-compiled / optimized / DLL files
