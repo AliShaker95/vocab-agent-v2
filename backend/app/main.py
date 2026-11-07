@@ -1,7 +1,7 @@
 import sys
 
-from agent import run_agent
-from tools import VOCAB_LIST
+from app.agent import run_agent
+from app.tools import VOCAB_LIST
 
 LEVELS = VOCAB_LIST.keys()
 

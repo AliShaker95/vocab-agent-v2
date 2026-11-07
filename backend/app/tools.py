@@ -5,13 +5,14 @@ import sys
 
 import requests
 
-from api_client import APIError, call_model
+from app.api_client import APIError, call_model
+from app.paths import DATA_DIR, OUTPUT_DIR
 
 DICTIONARY_URL = "https://www.dictionaryapi.com/api/v3/references/learners/json/"
 DICTIONARY_API_KEY = os.getenv("MERRIAM_WEBSTER_API_KEY")
 
 try:
-    with open("vocab_list.json", encoding="utf-8") as file:
+    with open(DATA_DIR / "vocab_list.json", encoding="utf-8") as file:
         VOCAB_LIST = json.load(file)
 except FileNotFoundError:
     print('"vocab_list.json" not found!')
@@ -26,7 +27,7 @@ except OSError as e:
 known_words = {}
 
 try:
-    with open("known_words.json", encoding="utf-8") as file:
+    with open(OUTPUT_DIR / "known_words.json", encoding="utf-8") as file:
         known_words = json.load(file)
 except FileNotFoundError:
     pass
@@ -93,7 +94,7 @@ def update_known_words(learned_word: str):
             if learned_word in known_words[level]:
                 break
             known_words[level].append(learned_word)
-            with open("known_words.json", "w", encoding="utf-8") as file:
+            with open(OUTPUT_DIR / "known_words.json", "w", encoding="utf-8") as file:
                 json.dump(known_words, file, indent=2)
             break
 

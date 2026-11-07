@@ -1,8 +1,10 @@
 import json
 import sys
 
+from backend.app.paths import EVALS_DIR
+
 try:
-    with open("evals_results.json", encoding="utf-8") as file:
+    with open(EVALS_DIR / "results" / "evals_results.json", encoding="utf-8") as file:
         evals_results = json.load(file)
 except FileNotFoundError:
     print('File "evals_results.json" not found!')

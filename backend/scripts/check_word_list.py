@@ -4,11 +4,13 @@ import sys
 from collections import Counter
 from datetime import datetime
 
-from agent import SYSTEM_PROMPT, run_agent
-from api_client import MODEL
-from tools import VOCAB_LIST
+from app.agent import SYSTEM_PROMPT, run_agent
+from app.api_client import MODEL
+from app.tools import VOCAB_LIST
 
-FILE_NAME = "check_word_list_results.json"
+from backend.app.paths import SCRIPTS_DIR
+
+FILE_NAME = SCRIPTS_DIR / "check_word_list_results.json"
 LEVELS = list(VOCAB_LIST)
 RUNS_PER_LEVEL = 5
 MESSAGE = [

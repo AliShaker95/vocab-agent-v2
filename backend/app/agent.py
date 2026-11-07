@@ -1,5 +1,5 @@
-from api_client import APIError, call_model
-from tools import TOOLS, run_tool
+from app.api_client import APIError, call_model
+from app.tools import TOOLS, run_tool
 
 MAX_STEPS = 10
 SYSTEM_PROMPT = """You are a vocabulary tutor for English learners.

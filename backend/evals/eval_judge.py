@@ -2,13 +2,14 @@ import json
 import sys
 from datetime import datetime
 
-from api_client import MODEL, APIError
-from tools import judge_sentence
+from app.api_client import MODEL, APIError
+from app.tools import judge_sentence
+from backend.app.paths import EVALS_DIR
 
 evals_results = []
 
 try:
-    with open("evals_results.json", encoding="utf-8") as file:
+    with open(EVALS_DIR / "results" / "evals_results.json", encoding="utf-8") as file:
         evals_results = json.load(file)
 except FileNotFoundError:
     pass
@@ -20,7 +21,7 @@ except OSError as e:
     sys.exit(1)
 
 try:
-    with open("judge_cases.json", encoding="utf-8") as file:
+    with open(EVALS_DIR / "cases" / "judge_cases.json", encoding="utf-8") as file:
         test_data = json.load(file)
 except FileNotFoundError:
     print('"judge_cases.json" not found!')
@@ -73,7 +74,7 @@ evals_results.append(
 )
 
 try:
-    with open("evals_results.json", "w", encoding="utf-8") as file:
+    with open(EVALS_DIR / "results" / "evals_results.json", "w", encoding="utf-8") as file:
         json.dump(evals_results, file, indent=2)
 
     print('The file "evals_results.json" has been saved.')
