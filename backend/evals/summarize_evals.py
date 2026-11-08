@@ -1,7 +1,7 @@
 import json
 import sys
 
-from backend.app.paths import EVALS_DIR
+from app.paths import EVALS_DIR
 
 try:
     with open(EVALS_DIR / "results" / "evals_results.json", encoding="utf-8") as file:
