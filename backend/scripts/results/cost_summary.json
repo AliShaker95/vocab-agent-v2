@@ -1,0 +1,137 @@
+{
+  "cycles_counted": 13,
+  "total_cost": 0.022441700000000002,
+  "average_cost_per_cycle": 0.0017262846153846155,
+  "cycles": [
+    {
+      "cycle": 1,
+      "calls": 12,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 21305,
+      "output_tokens": 1605,
+      "cost": 0.0029330000000000003
+    },
+    {
+      "cycle": 2,
+      "calls": 3,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 8786,
+      "output_tokens": 288,
+      "cost": 0.0010226000000000002
+    },
+    {
+      "cycle": 3,
+      "calls": 2,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 2689,
+      "output_tokens": 161,
+      "cost": 0.00034940000000000004
+    },
+    {
+      "cycle": 4,
+      "calls": 5,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 7461,
+      "output_tokens": 651,
+      "cost": 0.0010716
+    },
+    {
+      "cycle": 5,
+      "calls": 11,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 20341,
+      "output_tokens": 1370,
+      "cost": 0.0027191
+    },
+    {
+      "cycle": 6,
+      "calls": 4,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 12340,
+      "output_tokens": 550,
+      "cost": 0.001509
+    },
+    {
+      "cycle": 7,
+      "calls": 3,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 11120,
+      "output_tokens": 395,
+      "cost": 0.0013095
+    },
+    {
+      "cycle": 8,
+      "calls": 6,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 22405,
+      "output_tokens": 512,
+      "cost": 0.0024965000000000005
+    },
+    {
+      "cycle": 9,
+      "calls": 10,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 15580,
+      "output_tokens": 1287,
+      "cost": 0.0022015000000000003
+    },
+    {
+      "cycle": 10,
+      "calls": 10,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 24784,
+      "output_tokens": 1217,
+      "cost": 0.0030869
+    },
+    {
+      "cycle": 11,
+      "calls": 6,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 8348,
+      "output_tokens": 454,
+      "cost": 0.0010618000000000001
+    },
+    {
+      "cycle": 12,
+      "calls": 7,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 10329,
+      "output_tokens": 715,
+      "cost": 0.0013904
+    },
+    {
+      "cycle": 13,
+      "calls": 5,
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "input_tokens": 9379,
+      "output_tokens": 705,
+      "cost": 0.0012904000000000001
+    }
+  ]
+}

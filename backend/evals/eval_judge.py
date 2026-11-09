@@ -56,28 +56,33 @@ def run_eval(test_data: list) -> list:
     return results
 
 
-timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
-note = ""
+def main():
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    note = ""
 
-while not note:
-    note = input("Enter note: ").strip()
-    if not note:
-        print("Note cannot be empty.")
+    while not note:
+        note = input("Enter note: ").strip()
+        if not note:
+            print("Note cannot be empty.")
 
-evals_results.append(
-    {
-        "timestamp": timestamp,
-        "model": MODEL,
-        "note": note,
-        "results": run_eval(test_data),
-    }
-)
+    evals_results.append(
+        {
+            "timestamp": timestamp,
+            "model": MODEL,
+            "note": note,
+            "results": run_eval(test_data),
+        }
+    )
 
-try:
-    with open(EVALS_DIR / "results" / "evals_results.json", "w", encoding="utf-8") as file:
-        json.dump(evals_results, file, indent=2)
+    try:
+        with open(EVALS_DIR / "results" / "evals_results.json", "w", encoding="utf-8") as file:
+            json.dump(evals_results, file, indent=2)
 
-    print('The file "evals_results.json" has been saved.')
-except OSError as e:
-    print(f'Couldn\'t write "evals_results.json": {e}.')
-    sys.exit(1)
+        print('The file "evals_results.json" has been saved.')
+    except OSError as e:
+        print(f'Couldn\'t write "evals_results.json": {e}.')
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

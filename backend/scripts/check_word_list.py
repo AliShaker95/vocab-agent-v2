@@ -9,7 +9,7 @@ from app.api_client import MODEL
 from app.paths import SCRIPTS_DIR
 from app.tools import VOCAB_LIST
 
-FILE_NAME = SCRIPTS_DIR / "check_word_list_results.json"
+FILE_NAME = SCRIPTS_DIR / "results" / "check_word_list_results.json"
 LEVELS = list(VOCAB_LIST)
 RUNS_PER_LEVEL = 5
 MESSAGE = [
@@ -104,7 +104,7 @@ def save_results(note: str, runs: list):
         sys.exit(1)
 
 
-def main() -> None:
+def main():
     runs = []
     note = input("Enter note: ")
     try:

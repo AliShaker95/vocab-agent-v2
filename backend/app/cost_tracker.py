@@ -85,12 +85,16 @@ def calculate_cost(model, input_tokens, output_tokens):
 
 
 def track_call_cost(response):
-    """Read model and token usage from an API response, log the call, and return its cost."""
+    """Read model and token usage from an API response, log the call, and return its cost.
+    Calls made outside a learning session (cycle 0, e.g. eval scripts) are not logged."""
     model = response["model"]
     input_tokens = response["usage"]["input_tokens"]
     output_tokens = response["usage"]["output_tokens"]
 
     cost = calculate_cost(model, input_tokens, output_tokens)
+
+    if current_cycle == 0:
+        return cost
 
     entry = {
         "time": datetime.now().isoformat(timespec="seconds"),
@@ -104,3 +108,5 @@ def track_call_cost(response):
     OUTPUT_DIR.mkdir(exist_ok=True)
     with open(COST_LOG_FILE, "a", encoding="utf-8") as f:
         f.write(json.dumps(entry) + "\n")
+
+    return cost
