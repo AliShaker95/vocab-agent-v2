@@ -4,6 +4,8 @@ import sys
 import requests
 from dotenv import load_dotenv
 
+from app.cost_tracker import track_call_cost
+
 
 class APIError(Exception):
     pass
@@ -18,7 +20,7 @@ if not API_KEY:
 
 URL = "https://api.anthropic.com/v1/messages"
 
-MODEL = "claude-haiku-5-5"
+MODEL = os.getenv("Model", "claude-haiku-5-5")
 
 HEADERS = {
     "Content-Type": "application/json",
@@ -50,4 +52,5 @@ def call_model(messages: list, system: str | list, tools: list | None = None) ->
 
     if data.get("type") == "error":
         raise APIError(f"API returned an error: {data['error']['message']}")
+    track_call_cost(data)
     return data

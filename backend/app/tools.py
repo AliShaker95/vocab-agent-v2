@@ -6,6 +6,7 @@ import sys
 import requests
 
 from app.api_client import APIError, call_model
+from app.cost_tracker import begin_word_cycle
 from app.paths import DATA_DIR, OUTPUT_DIR
 
 DICTIONARY_URL = "https://www.dictionaryapi.com/api/v3/references/learners/json/"
@@ -99,7 +100,7 @@ def update_known_words(learned_word: str):
             break
 
 
-def get_vocab(level: str) -> str:
+def get_vocab(level: str | None) -> str:
     """Return a random vocabulary item for the selected level."""
     if not level:
         return f"No level given. Please call get_vocab with one of: {', '.join(VOCAB_LIST)}"
@@ -114,11 +115,15 @@ def get_vocab(level: str) -> str:
     if not available:
         return f"The learner has learned every word in the {level} level. Tell them they finished this level and suggest choosing another one."
     word = random.choice(available)
+    begin_word_cycle()
     return word
 
 
-def check_sentence(word: str, sentence: str) -> str:
+def check_sentence(word: str | None, sentence: str | None) -> str:
     """Judge the learner's sentence, save the word to known words if it is correct, and return the feedback for Claude, or an error message if the check failed."""
+
+    if not word or not sentence:
+        return "Missing word or sentence. Call check_sentence with both."
 
     try:
         check_result = judge_sentence(word, sentence)
@@ -167,7 +172,7 @@ def judge_sentence(word: str, sentence: str) -> dict:
     return verdict
 
 
-def lookup_word(word: str) -> str:
+def lookup_word(word: str | None) -> str:
     if not word:
         return "No word given. Please give a word when call lookup_word."
 
@@ -201,6 +206,7 @@ def lookup_word(word: str) -> str:
     ipa = pro.get("ipa")
     audio = pro.get("sound", {}).get("audio")
 
+    audio_link = None
     if audio:
         if audio.startswith("bix"):
             folder = "bix"
@@ -210,12 +216,7 @@ def lookup_word(word: str) -> str:
             folder = "number"
         else:
             folder = audio[0]
-
-    audio_link = (
-        f"https://media.merriam-webster.com/audio/prons/en/us/mp3/{folder}/{audio}.mp3"
-        if audio
-        else None
-    )
+        audio_link = f"https://media.merriam-webster.com/audio/prons/en/us/mp3/{folder}/{audio}.mp3"
 
     pos = entry.get("fl")
 

@@ -1,6 +1,7 @@
 import sys
 
 from app.agent import run_agent
+from app.cost_tracker import resume_cycle_count
 from app.tools import VOCAB_LIST
 
 LEVELS = VOCAB_LIST.keys()
@@ -21,6 +22,8 @@ while True:
         break
 
     print("Not a valid level!")
+
+resume_cycle_count()
 
 messages = [
     {
