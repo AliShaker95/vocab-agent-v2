@@ -35,7 +35,8 @@ def main():
     ]
 
     while True:
-        run_agent(messages)
+        result = run_agent(messages)
+        print(result["reply"])
 
         user_input = input("Type your message here:\n")
         while not user_input.strip():

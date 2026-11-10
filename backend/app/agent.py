@@ -15,25 +15,28 @@ SYSTEM_PROMPT = """You are a vocabulary tutor for English learners.
 - Keep replies short and clear, suitable for the learner's level."""
 
 
-def run_agent(messages: list):
+def run_agent(messages: list) -> dict:
     """Run the agent loop for one user turn: call the model, run any requested tools, and repeat until the model replies with text or the step limit is reached."""
-    for step in range(MAX_STEPS):
+    steps = []
+    for _ in range(MAX_STEPS):
         try:
             data = call_model(messages, SYSTEM_PROMPT, TOOLS)
         except APIError as e:
             print(f"An error occurred: {e}")
-            break
+            return {"reply": "Sorry, something went wrong. Please try again.", "steps": steps}
         messages.append({"role": "assistant", "content": data["content"]})
 
         if data["stop_reason"] != "tool_use":
+            text = []
             for block in data["content"]:
                 if block["type"] == "text":
-                    print(block["text"])
-            break
+                    text.append(block["text"])
+            return {"reply": "\n".join(text), "steps": steps}
 
         results = []
         for block in data["content"]:
             if block["type"] == "tool_use":
+                steps.append(block["name"])
                 tool_result = run_tool(block["name"], block["input"])
                 results.append(
                     {
@@ -43,5 +46,4 @@ def run_agent(messages: list):
                     }
                 )
         messages.append({"role": "user", "content": results})
-    else:
-        print("Sorry, I couldn't finish that. Please try again or rephrase.")
+    return {"reply": "Sorry, I couldn't finish that. Please try again or rephrase.", "steps": steps}
