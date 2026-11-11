@@ -1,7 +1,7 @@
 import sys
 
-from app.agent import run_agent
 from app.cost_tracker import resume_cycle_count
+from app.sessions import handle_message
 from app.tools import VOCAB_LIST
 
 LEVELS = VOCAB_LIST.keys()
@@ -27,15 +27,10 @@ def main():
 
     resume_cycle_count()
 
-    messages = [
-        {
-            "role": "user",
-            "content": f"My English level is {level}. Give me a vocabulary item to learn.",
-        }
-    ]
+    user_input = f"My English level is {level}. Give me a vocabulary item to learn."
 
     while True:
-        result = run_agent(messages)
+        result = handle_message("admin", user_input)
         print(result["reply"])
 
         user_input = input("Type your message here:\n")
@@ -44,8 +39,6 @@ def main():
 
         if user_input.lower().strip() == "quit":
             break
-
-        messages.append({"role": "user", "content": user_input})
 
 
 if __name__ == "__main__":
